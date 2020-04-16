@@ -82,7 +82,7 @@ function editMember(user) {
       user._id = ObjectID(user._id);
       user.birthDate = new Date(user.birthDate);
       editPassword(user)
-        .then(db.collection('members').updateOne({ _id: user._id }, { $set: user }, function (err, result) {
+        .then(preparedUser => db.collection('members').updateOne({ _id: user._id }, { $set: preparedUser }, function (err, result) {
           if (err) throw err;
           resolve(result);
         }));
