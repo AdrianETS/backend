@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 let membersDao = require("./dao/membersDao.js");
 let excursionsDao = require('./dao/excursionsDao');
+let auth = require("./services/auth");
 const express = require('express');
 const app = express();
 const port = 3001;
@@ -24,7 +25,10 @@ app.get('/excursions/list', cors(), (req, res)=>{
 
 app.get("/members/:id", cors(), (req, res)=>{
     membersDao.getMemberById(req.params.id)
-    .then(result=>res.send(result));
+    .then(result=>{
+        result.password = "";
+        res.send(result)
+    });
 })
 
 app.get("/excursions/:id", cors(), (req, res)=>{
@@ -60,6 +64,10 @@ app.put("/members", cors(),  (req, res)=>{
 app.put("/excursions", cors(), (req, res)=>{
     excursionsDao.editExcursion(req.body)
     .then(result=>res.send(result));
+})
+
+app.post("/login", cors(), (req, res)=>{
+    auth.login(req, res);
 })
 
 app.options('*', cors());
