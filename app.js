@@ -13,8 +13,12 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.get('/members/list', cors(), (req, res)=>{
-    membersDao.getAllMembers()
-    .then(members=>res.send(members));
+    console.log(req.query.token);
+    auth.checkToken(req.query.token)
+    .catch(()=>res.status(401).json({
+        error: 'Unauthorized'}))
+    .then(result=>membersDao.getAllMembers())
+    .then(members=>res.send(members));  
 })
 
 app.get('/excursions/list', cors(), (req, res)=>{

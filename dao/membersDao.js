@@ -10,6 +10,8 @@ const someOtherPlaintextPassword = 'not_bacon';
 
 var uri = "mongodb://localhost:27017/";
 
+//persistencia
+
 function getAllMembers() {
   return new Promise((resolve, reject) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });
@@ -82,6 +84,8 @@ function editMember(user) {
       user._id = ObjectID(user._id);
       user.birthDate = new Date(user.birthDate);
       editPassword(user)
+      //cuando se concatenan then el parámetro de la arrow de un then es lo que devuelve el resolve de la anterior
+      //de suerte que el resolve user de editPassword es lo que denominamos preparedUser en la siguiente línea
         .then(preparedUser => db.collection('members').updateOne({ _id: user._id }, { $set: preparedUser }, function (err, result) {
           if (err) throw err;
           resolve(result);
