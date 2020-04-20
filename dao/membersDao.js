@@ -10,8 +10,6 @@ const someOtherPlaintextPassword = 'not_bacon';
 
 var uri = "mongodb://localhost:27017/";
 
-//persistencia
-
 function getAllMembers() {
   return new Promise((resolve, reject) => {
     const client = new MongoClient(uri, { useUnifiedTopology: true });

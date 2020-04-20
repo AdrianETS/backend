@@ -4,6 +4,7 @@ var jwt = require('jsonwebtoken');
 
 function login(req, res) {
     console.log("Password: " + req.body.password);
+    //en el formulario expresamos en formato clave valor y podemos recuperarlos aquí con req.body.password
     console.log("Email: " + req.body.email);
     membersDao.login(req.body.email, req.body.password)
         .then(user => {
@@ -19,7 +20,7 @@ function checkToken(token) {
     return new Promise((resolve,reject) =>{
         jwt.verify(token, "Adrians_secret", function (err, decoded) {
             if (err || !token) {
-                reject();
+                reject(["Unauthorized", 401]);
             } else {
                 resolve();
             }
