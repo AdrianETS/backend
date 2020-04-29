@@ -96,11 +96,11 @@ function editPassword(user) {
   return new Promise((resolve, reject) => {
     console.log("1The provided pass is" + user.password);
     if (user.password == "") {
-      console.log("2The provided pass is" + user.password);
+      //console.log("2The provided pass is" + user.password);
       getMemberById(user._id).then(loadedUser => {
         user.password = loadedUser.password;
-        console.log("the loaded user is " + JSON.stringify(loadedUser));
-        console.log("3The loaded pass is" + user.password);
+        //console.log("the loaded user is " + JSON.stringify(loadedUser));
+        //console.log("3The loaded pass is" + user.password);
         resolve(user);
       })
     } else {

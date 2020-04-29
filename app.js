@@ -37,43 +37,91 @@ app.get('/excursions/list', cors(), (req, res) => {
 
 app.get("/members/:id", cors(), (req, res) => {
     auth.checkToken(req.query.token)
-        .catch(() => res.status(401).json({
-            error: 'Unauthorized'
-        }))
         .then(result => membersDao.getMemberById(req.params.id))
         .then(result => {
             result.password = "";
             res.send(result)
-        });
+        })
+        .catch(() => res.status(401).json({
+            error: 'Unauthorized'
+        }));
 })
 
 app.get("/excursions/:id", cors(), (req, res) => {
     auth.checkToken(req.query.token)
+        .then(() => excursionsDao.getExcursionById(req.params.id))
+        .then(result => res.send(result))
         .catch(() => res.status(401).json({
             error: 'Unauthorized'
-        }))
-        .then(() => excursionsDao.getExcursionById(req.params.id))
-        .then(result => res.send(result));
+        }));
 })
 
 app.get("/members/delete/:id", cors(), (req, res) => {
-    membersDao.deleteMember(req.params.id)
-        .then(result => res.send(result));
+    auth.checkToken(req.query.token)
+    .then(result => membersDao.deleteMember(req.params.id))
+    .then(result => res.send(result))
+    .catch(result => {
+        let err, status;
+        [err, status] = result;
+        if (!status) {
+            status = 500;
+            err = "Generic error";
+        }
+        res.status(status).json({
+            error: err,
+        });
+    });
 })
 
 app.get("/excursions/delete/:id", cors(), (req, res) => {
-    excursionsDao.deleteExcursion(req.params.id)
-        .then(result => res.send(result));
+    auth.checkToken(req.query.token)
+    .then(result =>excursionsDao.deleteExcursion(req.params.id))
+    .then(result => res.send(result))
+    .catch(result => {
+        let err, status;
+        [err, status] = result;
+        if (!status) {
+            status = 500;
+            err = "Generic error";
+        }
+        res.status(status).json({
+            error: err,
+        });
+    });
 })
 
 app.post("/members", cors(), (req, res) => {
-    membersDao.addMember(req.body)
-        .then(result => res.send(result));
+    auth.checkToken(req.query.token)
+        .then(result => membersDao.addMember(req.body))
+        .then(result => res.send(result))
+        .catch(result => {
+            let err, status;
+            [err, status] = result;
+            if (!status) {
+                status = 500;
+                err = "Generic error";
+            }
+            res.status(status).json({
+                error: err,
+            });
+        });
 })
 
 app.post("/excursions", cors(), (req, res) => {
-    excursionsDao.addExcursion(req.body)
-        .then(result => res.send(result));
+    auth.checkToken(req.query.token)
+        .then(result => excursionsDao.addExcursion(req.body))
+        .then(result => res.send(result))
+        .catch(result => {
+            let err, status;
+            [err, status] = result;
+            if (!status) {
+                status = 500;
+                err = "Generic error";
+            }
+            res.status(status).json({
+                error: err,
+            });
+        });
 })
 
 app.put("/members", cors(), (req, res) => {
@@ -97,8 +145,21 @@ app.put("/members", cors(), (req, res) => {
 })
 
 app.put("/excursions", cors(), (req, res) => {
-    excursionsDao.editExcursion(req.body)
-        .then(result => res.send(result));
+    auth.checkToken(req.query.token)
+        .then(result => excursionsDao.editExcursion(req.body))
+        .then(result => res.send(result))
+        .catch(result => {
+            let err, status;
+            [err, status] = result;
+            if (!status) {
+                //si no viene estatus le damos un 500 para "forzar" al navegador a que lo interprete de tal manera
+                status = 500;
+                err = "Generic error";
+            }
+            res.status(status).json({
+                error: err,
+            });
+        });
 })
 
 app.post("/login", cors(), (req, res) => {
