@@ -11,7 +11,7 @@ function login(req, res) {
             let token = jwt.sign({ id: user._id }, "Adrians_secret", {
                 expiresIn: 86400
             });
-            res.status(200).send({ auth: true, token: token });
+            res.status(200).send({ auth: true, token: token, userName: user.name, _id: user._id });
         })
         .catch(err => res.status(401).send({ auth: false, token: null, err }))
 }

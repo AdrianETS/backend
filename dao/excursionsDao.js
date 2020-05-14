@@ -59,7 +59,12 @@ function getExcursionById(id) {
         ]
       ).toArray(function (err, result) {
         if (err) throw err;
-        resolve(result);
+        if (result[0]){
+          resolve(result[0]);
+        } else {
+          reject("Not found");
+        }
+        //resolve(result);
 
       });
     })
@@ -95,7 +100,8 @@ function editExcursion(excursion) {
       excursion.users_id = excursion.users_id.map(id => ObjectID(id));
       db.collection('excursions').updateOne({ _id: excursion._id }, { $set: excursion }, function (err, result) {
         if (err) throw err;
-        resolve(result);
+        getExcursionById(excursion._id).
+        then(excursion => resolve(excursion))
       })
     })
   })
